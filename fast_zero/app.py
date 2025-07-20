@@ -3,7 +3,7 @@ from http import HTTPStatus
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 
-from fast_zero.schemas import Message
+from fast_zero.schemas import Message, UserSchema
 
 app = FastAPI(
     title='API Fast do Zero',
@@ -19,20 +19,6 @@ def read_root():
     return {'message': 'Olá mundo!'}
 
 
-@app.get(
-    '/ola-mundo-html',
-    status_code=HTTPStatus.OK,
-    response_class=HTMLResponse,
-)
-def read_root_html():
-    return """
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <title>Olá Mundo</title>
-        </head>
-        <body>
-            <h1>Olá mundo!</h1>
-        </body>
-    </html>
-    """
+@app.post('/users/', status_code=HTTPStatus.CREATED)
+def create_user(user: UserSchema):
+    return user
