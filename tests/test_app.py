@@ -1,4 +1,3 @@
-import re
 from http import HTTPStatus
 
 from fastapi.testclient import TestClient
@@ -15,12 +14,20 @@ def test_root_deve_retornar_ok_e_ola_mundo():
     assert response.json() == {'message': 'Olá mundo!'}
 
 
-def test_root_html_deve_retornar_ok_e_ola_mundo_html():
+def test_create_user_deve_retornar_user():
     client = TestClient(app)
 
-    response = client.get('/ola-mundo-html')
+    response = client.post(
+        '/users/',
+        json={'username': 'João',
+              'email': 'joao@example.com',
+              'password': '123'
+              }
+    )
 
-    assert response.status_code == HTTPStatus.OK
-    assert response.headers['content-type'] == 'text/html; charset=utf-8'
-    assert re.search(r'<h1>Olá mundo!</h1>', response.text)
-    assert re.search(r'<title>Olá Mundo</title>', response.text)
+    assert response.status_code == HTTPStatus.CREATED
+    assert response.json() == {
+        'username': 'João',
+        'email': 'joao@example.com',
+        'password': '123'
+    }
